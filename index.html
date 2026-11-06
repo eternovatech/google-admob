@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>AdMob · SANTOSH ADHIKARI</title>
+  <!-- Google Font & Material Icons for a fresh look -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0,1" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Google Sans', Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f1f3f4;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* --- SIDEBAR (material refresh) --- */
+    .sidebar {
+      width: 280px;
+      background: #ffffff;
+      border-right: 1px solid #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1);
+      z-index: 1000;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.02);
+    }
+
+    .sidebar.collapsed {
+      transform: translateX(-100%);
+    }
+
+    .logo-container {
+      padding: 20px 24px 16px 24px;
+      border-bottom: 1px solid #f1f3f4;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #4285f4, #34a853, #fbbc04, #ea4335);
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 500;
+      color: #3c4043;
+      letter-spacing: -0.3px;
+    }
+
+    .logo-text span {
+      color: #1a73e8;
+      font-weight: 500;
+    }
+
+    .nav-menu {
+      padding: 12px 0 20px 0;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 24px;
+      color: #3c4043;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      border-radius: 0 24px 24px 0;
+      margin: 2px 8px 2px 0;
+      transition: background 0.15s;
+    }
+
+    .nav-item.active {
+      background-color: #e8f0fe;
+      color: #1967d2;
+      border-radius: 0 24px 24px 0;
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 4px;
+      background-color: #1967d2;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .nav-item:hover:not(.active) {
+      background-color: #f8f9fa;
+    }
+
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #5f6368;
+      font-size: 22px;
+    }
+
+    .nav-item.active .nav-icon {
+      color: #1967d2;
+    }
+
+    .beta-badge {
+      background-color: #f1f3f4;
+      color: #5f6368;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-left: auto;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-divider {
+      height: 1px;
+      background-color: #f1f3f4;
+      margin: 12px 20px;
+    }
+
+    /* mobile toggle */
+    .mobile-menu-toggle {
+      display: none;
+      background: white;
+      border: 1px solid #dadce0;
+      border-radius: 40px;
+      padding: 8px 14px;
+      margin-right: 12px;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      color: #1a73e8;
+      font-weight: 500;
+      font-size: 14px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .mobile-menu-toggle span {
+      font-size: 20px;
+    }
+
+    /* --- MAIN CONTENT --- */
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 32px;
+      transition: padding 0.2s;
+      background: #f8f9fa;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: #202124;
+      letter-spacing: -0.2px;
+    }
+
+    .search-container {
+      flex: 1;
+      max-width: 540px;
+      margin: 0 24px;
+      position: relative;
+      min-width: 180px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px 12px 48px;
+      border: 1px solid #dadce0;
+      border-radius: 28px;
+      font-size: 14px;
+      background: white;
+      transition: box-shadow 0.15s, border 0.15s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #1a73e8;
+      box-shadow: 0 1px 6px rgba(26,115,232,0.15);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #5f6368;
+      font-size: 20px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: white;
+      padding: 4px 12px 4px 4px;
+      border-radius: 40px;
+      border: 1px solid #dadce0;
+      cursor: pointer;
+      transition: background 0.1s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .user-info:hover {
+      background: #f8f9fa;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1a73e8, #0d47a1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    .user-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #202124;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .owner-badge {
+      background: #e8f0fe;
+      color: #1a73e8;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-left: 6px;
+      font-weight: 500;
+    }
+
+    .user-email {
+      font-size: 12px;
+      color: #5f6368;
+    }
+
+    .help-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #5f6368;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .help-icon:hover {
+      background: #f1f3f4;
+    }
+
+    .update-time {
+      text-align: right;
+      font-size: 12px;
+      color: #5f6368;
+      margin-bottom: 12px;
+      letter-spacing: 0.2px;
+    }
+
+    /* cards */
+    .earnings-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .earnings-card {
+      background: white;
+      border: 1px solid #dadce0;
+      border-radius: 12px;
+      padding: 20px 20px 18px;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .earnings-card.updated {
+      background: #e8f0fe;
+      border-color: #1a73e8;
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(26,115,232,0.08);
+    }
+
+    .card-label {
+      font-size: 14px;
+      color: #5f6368;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .update-badge {
+      font-size: 10px;
+      color: #1a73e8;
+      background: #e8f0fe;
+      padding: 2px 8px;
+      border-radius: 12px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .earnings-card.updated .update-badge {
+      opacity: 1;
+    }
+
+    .card-value {
+      font-size: 30px;
+      font-weight: 500;
+      color: #202124;
+      letter-spacing: -0.5px;
+    }
+
+    .card-subvalue {
+      font-size: 12px;
+      color: #5f6368;
+      margin-top: 4px;
+    }
+
+    /* daily range */
+    .daily-range {
+      background: white;
+      border: 1px solid #dadce0;
+      border-radius: 12px;
+      padding: 16px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .range-bar {
+      flex: 1;
+      height: 8px;
+      background: #f1f3f4;
+      border-radius: 8px;
+      margin: 0 16px;
+      position: relative;
+      min-width: 100px;
+    }
+
+    .range-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1a73e8, #34a853);
+      border-radius: 8px;
+      width: 75%;
+      transition: width 0.3s;
+    }
+
+    .welcome-section {
+      background: linear-gradient(135deg, #1a73e8, #0d47a1);
+      color: white;
+      padding: 20px 28px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: 0 4px 12px rgba(26,115,232,0.2);
+    }
+
+    .welcome-text h2 {
+      font-weight: 500;
+      font-size: 22px;
+      letter-spacing: -0.3px;
+    }
+
+    .welcome-text p {
+      opacity: 0.85;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .owner-tag {
+      background: rgba(255,255,255,0.18);
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(2px);
+    }
+
+    /* performance */
+    .performance-section, .app-performance {
+      background: white;
+      border: 1px solid #dadce0;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .section-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid #f1f3f4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .metrics-grid {
+      padding: 24px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .metric-main-value {
+      font-size: 28px;
+      font-weight: 500;
+      color: #202124;
+      letter-spacing: -0.3px;
+    }
+
+    .metric-compare {
+      font-size: 13px;
+      color: #34a853;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .metric-compare.negative {
+      color: #ea4335;
+    }
+
+    .metric-compare-value {
+      background: #e6f4ea;
+      padding: 2px 10px;
+      border-radius: 16px;
+      font-weight: 500;
+    }
+
+    .metric-compare.negative .metric-compare-value {
+      background: #fce8e6;
+      color: #ea4335;
+    }
+
+    /* app table */
+    .table-header {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1fr;
+      padding: 14px 24px;
+      border-bottom: 1px solid #f1f3f4;
+      font-size: 14px;
+      color: #5f6368;
+      font-weight: 500;
+    }
+
+    .app-row {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1fr;
+      padding: 14px 24px;
+      border-bottom: 1px solid #f1f3f4;
+      align-items: center;
+      transition: background 0.1s;
+    }
+
+    .app-row:hover {
+      background: #f8f9fa;
+    }
+
+    .app-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .app-icon {
+      width: 36px;
+      height: 36px;
+      background: #e8f0fe;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1a73e8;
+      font-size: 20px;
+    }
+
+    .app-name {
+      font-weight: 500;
+      color: #202124;
+    }
+
+    .app-meta {
+      font-size: 12px;
+      color: #5f6368;
+    }
+
+    .earning-value {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .trend-up, .trend-down {
+      padding: 2px 10px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .trend-up { background: #e6f4ea; color: #1e7e34; }
+    .trend-down { background: #fce8e6; color: #d93025; }
+
+    .view-report {
+      margin-top: 20px;
+      text-align: right;
+      padding-bottom: 8px;
+    }
+    .view-report-link {
+      color: #1a73e8;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 24px;
+      transition: background 0.1s;
+      display: inline-block;
+    }
+    .view-report-link:hover {
+      background: #e8f0fe;
+    }
+
+    /* expand section (placeholder) */
+    .expand-section {
+      background: white;
+      border: 1px solid #dadce0;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .expand-header {
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: default;
+    }
+
+    /* --- MOBILE --- */
+    @media screen and (max-width: 900px) {
+      body { overflow-y: auto; }
+      .sidebar {
+        position: fixed;
+        height: 100vh;
+        box-shadow: 4px 0 20px rgba(0,0,0,0.08);
+        transform: translateX(-100%);
+      }
+      .sidebar.show-mobile {
+        transform: translateX(0) !important;
+      }
+      .main-content { padding: 16px; width: 100%; }
+      .top-bar { flex-wrap: wrap; }
+      .search-container {
+        order: 3;
+        margin: 0;
+        max-width: 100%;
+        flex: 0 0 100%;
+      }
+      .mobile-menu-toggle {
+        display: flex;
+      }
+      .page-title { font-size: 20px; }
+      .user-details .user-email { display: none; }
+      .user-details .user-name { font-size: 13px; }
+      .owner-badge { font-size: 9px; }
+      .avatar { width: 32px; height: 32px; }
+    }
+
+    @media screen and (max-width: 700px) {
+      .earnings-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+      .daily-range {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .range-bar {
+        margin: 6px 0;
+      }
+      .table-header, .app-row {
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 6px;
+        padding: 14px 16px;
+        font-size: 13px;
+      }
+      .app-info { gap: 10px; }
+      .app-icon { width: 32px; height: 32px; }
+    }
+
+    @media screen and (max-width: 480px) {
+      .main-content { padding: 12px; }
+      .welcome-section { flex-direction: column; align-items: start; }
+      .owner-tag { align-self: flex-start; }
+      .user-profile .help-icon { display: none; }
+      .user-info { padding: 4px 8px 4px 4px; }
+      .card-value { font-size: 22px; }
+      .metric-main-value { font-size: 22px; }
+      .table-header, .app-row {
+        grid-template-columns: 1.5fr 1fr 1fr;
+        padding: 10px 8px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="logo-container">
+      <div class="logo">
+        <div class="logo-icon"></div>
+        <div class="logo-text">Google <span>AdMob</span></div>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <div class="nav-item active"> <span class="nav-icon">🏠</span> Home </div>
+      <div class="nav-item"> <span class="nav-icon">📱</span> Apps </div>
+      <div class="nav-item"> <span class="nav-icon">📊</span> Reports </div>
+      <div class="nav-item"> <span class="nav-icon">🔄</span> Mediation </div>
+      <div class="nav-item"> <span class="nav-icon">🎯</span> Campaigns </div>
+      <div class="nav-item"> <span class="nav-icon">⚖️</span> Policy centre </div>
+      <div class="nav-item"> <span class="nav-icon">🔒</span> Privacy & messaging </div>
+      <div class="nav-item"> <span class="nav-icon">📋</span> Publisher data <span class="beta-badge">BETA</span> </div>
+      <div class="nav-item"> <span class="nav-icon">🚫</span> Blocking controls </div>
+      <div class="nav-item"> <span class="nav-icon">💰</span> Payments </div>
+      <div class="nav-item"> <span class="nav-icon">📝</span> Change history <span class="beta-badge">BETA</span> </div>
+      <div class="nav-divider"></div>
+      <div class="nav-item"> <span class="nav-icon">⚙️</span> Settings </div>
+      <div class="nav-item"> <span class="nav-icon">🧪</span> Labs </div>
+      <div class="nav-item"> <span class="nav-icon">❓</span> Help </div>
+      <div class="nav-item"> <span class="nav-icon">💬</span> Feedback </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content" id="mainContent">
+    <!-- Top bar -->
+    <div class="top-bar">
+      <div style="display: flex; align-items: center;">
+        <div class="mobile-menu-toggle" id="menuToggle">
+          <span>☰</span> Menu
+        </div>
+        <div class="page-title">Home</div>
+      </div>
+      <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" type="text" placeholder="Search apps, ad units...">
+      </div>
+      <div class="user-profile">
+        <div class="help-icon">❓</div>
+        <div class="user-info">
+          <div class="avatar">SA</div>
+          <div class="user-details">
+            <div class="user-name">
+              SANTOSH ADHIKARI
+              <span class="owner-badge">OWNER</span>
+            </div>
+            <div class="user-email">santosh.a@admob.com</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Welcome -->
+    <div class="welcome-section">
+      <div class="welcome-text">
+        <h2>Welcome back, SANTOSH ADHIKARI! 👋</h2>
+        <p>Your apps are performing well. Daily earnings: €180–230</p>
+      </div>
+      <div class="owner-tag"><span>👑</span> Account Owner</div>
+    </div>
+
+    <!-- Last Updated -->
+    <div class="update-time" id="updateTime"></div>
+
+    <!-- Expand placeholder -->
+    <div class="expand-section">
+      <div class="expand-header">
+        <span><span style="margin-right:10px;">📋</span> Home (Expand checklist)</span>
+        <span>▼</span>
+      </div>
+    </div>
+
+    <!-- Earnings cards -->
+    <div class="earnings-grid">
+      <div class="earnings-card" id="todayCard"><div class="card-label">Today so far<span class="update-badge">updated</span></div><div class="card-value" id="todayValue">€218</div><div class="card-subvalue">~€9.10/hr</div></div>
+      <div class="earnings-card" id="yesterdayCard"><div class="card-label">Yesterday<span class="update-badge">updated</span></div><div class="card-value" id="yesterdayValue">€203</div><div class="card-subvalue">€180–230 range</div></div>
+      <div class="earnings-card" id="monthCard"><div class="card-label">This month so far<span class="update-badge">updated</span></div><div class="card-value" id="monthValue">€3,200</div><div class="card-subvalue">15 days</div></div>
+      <div class="earnings-card" id="lastMonthCard"><div class="card-label">Last month<span class="update-badge">updated</span></div><div class="card-value" id="lastMonthValue">€33,000</div><div class="card-subvalue">28 days</div></div>
+    </div>
+
+    <!-- Daily range (180–230) -->
+    <div class="daily-range">
+      <span class="range-label">Daily earnings:</span>
+      <span class="range-value" id="currentDaily">€208</span>
+      <div class="range-bar"><div class="range-fill" id="rangeFill" style="width: 62%"></div></div>
+      <span class="range-label">€180 – €230</span>
+    </div>
+
+    <!-- Performance -->
+    <div class="performance-section">
+      <div class="section-header">
+        <span class="section-title">Last 7 days vs previous 7 days</span>
+        <span class="date-range"><span style="background:#f1f3f4;padding:4px 12px;border-radius:20px;">Last 7 days</span> <span id="dateRange">Feb 24 – Mar 2, 2026</span> ▼</span>
+      </div>
+      <div style="padding: 0 24px 6px 24px; font-size:15px; color:#3c4043;">Ads activity performance</div>
+      <div class="metrics-grid">
+        <div class="metric-item"><div class="metric-label">Estimated earnings</div><div class="metric-main-value" id="weeklyEarnings">€1,465</div><div class="metric-compare"><span>+€210</span></div></div>
+        <div class="metric-item"><div class="metric-label">Requests</div><div class="metric-main-value" id="requests">132.8k</div><div class="metric-compare"><span class="metric-compare-value">+17.6%</span></div></div>
+        <div class="metric-item"><div class="metric-label">Impressions</div><div class="metric-main-value" id="impressions">101.4k</div><div class="metric-compare"><span>+13.2k</span><span class="metric-compare-value">+15.1%</span></div></div>
+        <div class="metric-item"><div class="metric-label">Match rate</div><div class="metric-main-value" id="matchRate">93.6%</div><div class="metric-compare negative"><span>-0.8%</span><span class="metric-compare-value">-1.2%</span></div></div>
+      </div>
+    </div>
+
+    <!-- App performance -->
+    <div class="app-performance">
+      <div class="section-header"><span class="section-title">App performance</span></div>
+      <div style="padding: 0 24px 12px 24px;"><span style="font-weight:500; color:#3c4043;">Top performers</span></div>
+      <div class="table-header"><div>App</div><div>Estimated earnings</div><div>Impressions</div></div>
+      <div class="app-row"><div class="app-info"><div class="app-icon">📚</div><div class="app-details"><div class="app-name">Learn Computer Ba...</div><div class="app-meta">Free · iOS</div></div></div><div class="earning-value">€524<span class="trend-up">+12.3%</span></div><div>42.1k <span style="color:#34a853;">+8.2%</span></div></div>
+      <div class="app-row"><div class="app-info"><div class="app-icon">🎮</div><div class="app-details"><div class="app-name">Ludo Offline Board...</div><div class="app-meta">Free · iOS</div></div></div><div class="earning-value">€412<span class="trend-down">-4.5%</span></div><div>38.7k <span style="color:#ea4335;">-2.1%</span></div></div>
+      <div class="app-row"><div class="app-info"><div class="app-icon">🤖</div><div class="app-details"><div class="app-name">Learn AI (LA)</div><div class="app-meta">Free · iOS</div></div></div><div class="earning-value">€387<span class="trend-up">+24.7%</span></div><div>35.2k <span style="color:#34a853;">+18.3%</span></div></div>
+      <div class="app-row"><div class="app-info"><div class="app-icon">📱</div><div class="app-details"><div class="app-name">Learn Digital Marke...</div><div class="app-meta">Free · iOS</div></div></div><div class="earning-value">€298<span class="trend-up">+42.8%</span></div><div>28.9k <span style="color:#34a853;">+35.2%</span></div></div>
+      <div class="app-row"><div class="app-info"><div class="app-icon">🏁</div><div class="app-details"><div class="app-name">Flags of All World...</div><div class="app-meta">Free · iOS</div></div></div><div class="earning-value">€156<span class="trend-up">+15.2%</span></div><div>14.8k <span style="color:#34a853;">+11.4%</span></div></div>
+    </div>
+
+    <div class="view-report"><span class="view-report-link">View full report →</span></div>
+  </div>
+
+  <script>
+    (function() {
+      const sidebar = document.getElementById('sidebar');
+      const menuToggle = document.getElementById('menuToggle');
+
+      // mobile toggle
+      if (menuToggle) {
+        menuToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          sidebar.classList.toggle('show-mobile');
+          if (window.innerWidth <= 900) {
+            sidebar.style.transform = sidebar.classList.contains('show-mobile') ? 'translateX(0)' : 'translateX(-100%)';
+          }
+        });
+      }
+
+      // close on outside click (mobile)
+      document.addEventListener('click', (event) => {
+        if (window.innerWidth > 900) return;
+        if (!sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
+          sidebar.classList.remove('show-mobile');
+          sidebar.style.transform = 'translateX(-100%)';
+        }
+      });
+
+      // resize handler
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 900) {
+          sidebar.style.transform = '';
+          sidebar.classList.remove('show-mobile');
+        } else {
+          if (!sidebar.classList.contains('show-mobile')) {
+            sidebar.style.transform = 'translateX(-100%)';
+          } else {
+            sidebar.style.transform = 'translateX(0)';
+          }
+        }
+      });
+
+      // ---- UPDATED REALISTIC EARNINGS ----
+      // last month set to €33,000 as requested
+      const todayEl = document.getElementById('todayValue');
+      const yesterdayEl = document.getElementById('yesterdayValue');
+      const monthEl = document.getElementById('monthValue');
+      const lastMonthEl = document.getElementById('lastMonthValue');
+      const currentDailyEl = document.getElementById('currentDaily');
+      const rangeFill = document.getElementById('rangeFill');
+      const weeklyEarningsEl = document.getElementById('weeklyEarnings');
+      const updateTimeEl = document.getElementById('updateTime');
+
+      // initial values (within realistic ranges)
+      let today = 218;
+      let yesterday = 203;
+      let month = 3200;      // will grow toward 35k by end of month
+      let lastMonth = 33000; // fixed as per request
+
+      // set last month to 33k
+      lastMonthEl.textContent = '€33,000';
+
+      function updateEarnings() {
+        // daily variation: 180–230
+        const minDaily = 180;
+        const maxDaily = 230;
+        let delta = (Math.random() * 8) - 2;
+        today = today + delta;
+        if (today > maxDaily) today = maxDaily - (today - maxDaily) * 0.3;
+        if (today < minDaily) today = minDaily + (minDaily - today) * 0.3;
+        today = Math.round(today * 10) / 10;
+
+        // yesterday
+        if (Math.random() < 0.25) {
+          yesterday = today + (Math.random() * 20 - 10);
+          yesterday = Math.min(maxDaily, Math.max(minDaily, yesterday));
+          yesterday = Math.round(yesterday * 10) / 10;
+        }
+
+        // month: accumulate toward 35k
+        const dailyIncrement = 1167 + (Math.random() * 300 - 150);
+        month = month + dailyIncrement;
+        if (month > 36000) month = 36000 - (month - 36000) * 0.1;
+        if (month < 28000) month = 28000 + (28000 - month) * 0.1;
+        month = Math.round(month);
+
+        // last month stays at 33k (we keep it fixed, but we re-display it)
+        lastMonthEl.textContent = '€33,000';
+
+        // update DOM
+        todayEl.textContent = '€' + today.toFixed(2);
+        yesterdayEl.textContent = '€' + yesterday.toFixed(2);
+        monthEl.textContent = '€' + month.toFixed(2);
+        // last month already set
+        currentDailyEl.textContent = '€' + today.toFixed(2);
+
+        // range fill (180–230)
+        const percent = Math.min(100, Math.max(0, ((today - minDaily) / (maxDaily - minDaily)) * 100));
+        rangeFill.style.width = percent + '%';
+
+        // weekly earnings
+        let weekly = today * 7 + (Math.random() * 80 - 40);
+        weekly = Math.round(weekly);
+        weeklyEarningsEl.textContent = '€' + weekly;
+
+        // update badges (flash)
+        document.querySelectorAll('.earnings-card').forEach(c => c.classList.add('updated'));
+        setTimeout(() => {
+          document.querySelectorAll('.earnings-card').forEach(c => c.classList.remove('updated'));
+        }, 900);
+
+        // timestamp
+        const now = new Date();
+        updateTimeEl.textContent = 'Last updated: ' + now.toLocaleTimeString() + ' (auto-updates)';
+      }
+
+      // date range (last 7 days)
+      function setDateRange() {
+        const today = new Date();
+        const end = new Date(today);
+        const start = new Date(today);
+        start.setDate(today.getDate() - 7);
+        const opts = { month: 'short', day: 'numeric' };
+        document.getElementById('dateRange').textContent = 
+          start.toLocaleDateString('en-US', opts) + ' – ' + end.toLocaleDateString('en-US', opts) + ', 2026';
+      }
+      setDateRange();
+
+      // initial update + interval
+      updateEarnings();
+      setInterval(updateEarnings, 28000);
+
+      // extra: simulate requests/impressions/match rate (optional dynamic)
+      setInterval(() => {
+        const reqEl = document.getElementById('requests');
+        const impEl = document.getElementById('impressions');
+        const matchEl = document.getElementById('matchRate');
+        if (reqEl) {
+          let val = parseFloat(reqEl.textContent.replace('k',''));
+          val = val + (Math.random() * 0.6 - 0.2);
+          val = Math.max(120, Math.min(145, val));
+          reqEl.textContent = val.toFixed(1) + 'k';
+        }
+        if (impEl) {
+          let val = parseFloat(impEl.textContent.replace('k',''));
+          val = val + (Math.random() * 0.5 - 0.15);
+          val = Math.max(88, Math.min(112, val));
+          impEl.textContent = val.toFixed(1) + 'k';
+        }
+        if (matchEl) {
+          let val = parseFloat(matchEl.textContent.replace('%',''));
+          val = val + (Math.random() * 0.4 - 0.2);
+          val = Math.min(96, Math.max(90, val));
+          matchEl.textContent = val.toFixed(1) + '%';
+        }
+      }, 20000);
+    })();
+  </script>
+</body>
+</html>
